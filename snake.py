@@ -77,9 +77,9 @@ class Snake:
         return self.__orientation
 
     def set_orientation(self, orientation):
-        if self.__orientation == "UP" and orientation == "Down":
+        if self.__orientation == "Up" and orientation == "Down":
             return False
-        if self.__orientation == "Down" and orientation == "UP":
+        if self.__orientation == "Down" and orientation == "Up":
             return False
         if self.__orientation == "Right" and orientation == "Left":
             return False

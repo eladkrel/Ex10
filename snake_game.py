@@ -18,6 +18,8 @@ class SnakeGame:
         self.__update_board()
         self.__walls_num = args.walls
         self.__apples_num = args.apples
+        self.__round = 0
+        self.__max_rounds = args.rounds
         # if self.__walls_num > 0:
         #     self.__walls.append(self.add_wall())
         # self.__update_board()
@@ -34,16 +36,25 @@ class SnakeGame:
         #     self.__x -= 1
         # elif (self.__key_clicked == 'Right') and (self.__x < 40):
         #     self.__x += 1
-        if (self.__key_clicked == 'Left'):
+        if self.__key_clicked == 'Left':
             self.__snake.set_orientation('Left')
-        if (self.__key_clicked == 'Right'):
+        if self.__key_clicked == 'Right':
             self.__snake.set_orientation('Right')
-        if (self.__key_clicked == 'Up'):
+        if self.__key_clicked == 'Up':
             self.__snake.set_orientation('Up')
-        if (self.__key_clicked == 'Down'):
+        if self.__key_clicked == 'Down':
             self.__snake.set_orientation('Down')
         self.__snake.move()
         self.__update_board()
+        if self.__round % 2 == 0 and self.__round != 0:
+            for wall in self.__walls:
+                wall.move()
+        if len(self.__walls) < self.__walls_num and self.__round != 0:
+            self.add_wall()
+        if len(self.__apples) < self.__apples_num and self.__round != 0:
+            self.add_apple()
+        self.__remove_dead_walls()
+        self.__round += 1
 
     def are_empty_cells(self, cells_list):
         for width, height in cells_list:
@@ -86,6 +97,11 @@ class SnakeGame:
                 self.__game_board[width][height] = "blue"
         for width, height in apples_locations:
             self.__game_board[width][height] = "green"
+
+    def __remove_dead_walls(self):
+        for wall in self.__walls:
+            if len(wall.get_locations()) == 0:
+                self.__walls.remove(wall)
 
     def add_apple(self):
         is_possible = False
