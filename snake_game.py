@@ -34,6 +34,14 @@ class SnakeGame:
         #     self.__x -= 1
         # elif (self.__key_clicked == 'Right') and (self.__x < 40):
         #     self.__x += 1
+        if (self.__key_clicked == 'Left'):
+            self.__snake.set_orientation('Left')
+        if (self.__key_clicked == 'Right'):
+            self.__snake.set_orientation('Right')
+        if (self.__key_clicked == 'Up'):
+            self.__snake.set_orientation('Up')
+        if (self.__key_clicked == 'Down'):
+            self.__snake.set_orientation('Down')
         self.__snake.move()
         self.__update_board()
 
