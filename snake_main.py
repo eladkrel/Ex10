@@ -2,12 +2,17 @@ import argparse
 import game_utils
 from snake_game import SnakeGame
 from game_display import GameDisplay
+from snake import *
 
 def main_loop(gd: GameDisplay, args: argparse.Namespace) -> None:
-    # hey my name is doron
     # INIT OBJECTS
-    game = SnakeGame()
+    game = SnakeGame(args)
     gd.show_score(0)
+    if game.get_walls_num() > 0:
+        game.add_wall()
+    if game.get_num_apples() > 0:
+        game.add_apple()
+
     # DRAW BOARD
     game.draw_board(gd)
     # END OF ROUND 0

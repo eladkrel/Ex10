@@ -8,7 +8,8 @@ class Wall:
         self.__board_height = board_height
         self.__length = WALL_LENGTH
         self.__x, self.__y, self.__orientation = get_random_wall_data()
-        self.__locations = [(self.__x, self.__y)]
+        self.__locations = []
+        self.__locations.append((self.__x, self.__y))
         for i in range(self.__length//2):
             self.__add_head()
             self.__add_tail()
