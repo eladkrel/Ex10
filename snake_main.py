@@ -4,7 +4,7 @@ from snake_game import SnakeGame
 from game_display import GameDisplay
 
 def main_loop(gd: GameDisplay, args: argparse.Namespace) -> None:
-
+    # hey my name is doron
     # INIT OBJECTS
     game = SnakeGame()
     gd.show_score(0)
