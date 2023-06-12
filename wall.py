@@ -1,5 +1,7 @@
-from game_utils import  get_random_wall_data
+from game_utils import get_random_wall_data
 WALL_LENGTH = 3
+
+
 class Wall:
     def __init__(self, board_width, board_height):
         self.__board_width = board_width
@@ -10,7 +12,6 @@ class Wall:
         for i in range(self.__length//2):
             self.__add_head()
             self.__add_tail()
-
 
     def __add_tail(self):
 
@@ -32,7 +33,6 @@ class Wall:
                 self.__locations.append((last_width - 1, last_height))
                 return True
         return False
-
 
     def __add_head(self):
 
@@ -71,14 +71,8 @@ class Wall:
         self.__add_head()
         self.remove_tail()
 
-        #     return False  # do i need it??
-        # return True
-
-
     def get_locations(self):
         return self.__locations
 
     def get_wall_length(self):
         return self.__length
-
-
