@@ -67,9 +67,11 @@ class Snake:
             return False
         return True
 
-
     def get_locations(self):
         return self.__locations
+
+    def get_head(self):
+        return self.__locations[0]
 
     def get_orientation(self):
         return self.__orientation
