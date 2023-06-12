@@ -62,6 +62,11 @@ class Snake:
             self.remove_tail()
         else:
             self.__grow -= 1
+        if self.__locations[0] in self.__locations[1:]:
+            # Snake hit itself
+            return False
+        return True
+
 
     def get_locations(self):
         return self.__locations
