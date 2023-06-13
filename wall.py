@@ -3,7 +3,12 @@ WALL_LENGTH = 3
 
 
 class Wall:
-    def __init__(self, board_width, board_height):
+    def __init__(self, board_width, board_height) -> None:
+        """
+        The init for the Wall class
+        :param board_width: The width of the board
+        :param board_height: The height of the board
+        """
         self.__board_width = board_width
         self.__board_height = board_height
         self.__length = WALL_LENGTH
@@ -14,8 +19,11 @@ class Wall:
             self.__add_head()
             self.__add_tail()
 
-    def __add_tail(self):
-
+    def __add_tail(self) -> bool:
+        """
+        Function adds a tail to the wall
+        :return: True if operation successful, False otherwise
+        """
         last_width, last_height = self.__locations[-1]
         if self.__orientation == "Up":
             if self.__locations[-1][1] > 0:
@@ -35,27 +43,12 @@ class Wall:
                 return True
         return False
 
-    def __add_head(self):
-
-        # head_width, head_height = self.__locations[0]  # THERE IS A PROBLEM
-        # if self.__orientation == "Up":
-        #     if self.__locations[0][1] < self.__board_height - 1:
-        #         self.__locations.insert(0, (head_width, head_height + 1))
-        #         return True
-        # if self.__orientation == "Down":
-        #     if self.__locations[0][1] > 0:
-        #         self.__locations.insert(0, (head_width, head_height - 1))
-        #         return True
-        # if self.__orientation == "Left":
-        #     if self.__locations[0][0] > 0:
-        #         self.__locations.insert(0, (head_width - 1, head_height))
-        #         return True
-        # if self.__orientation == "Right":
-        #     if self.__locations[0][0] < self.__board_width - 1:
-        #         self.__locations.insert(0, (head_width + 1, head_height))
-        #         return True
-        # return False
-        head_width, head_height = self.__locations[0]  # THERE IS A PROBLEM
+    def __add_head(self) -> bool:
+        """
+        Function adds a head to the wall
+        :return: True if operation successful, False otherwise
+        """
+        head_width, head_height = self.__locations[0]
         if self.__orientation == "Up":
             self.__locations.insert(0, (head_width, head_height + 1))
             return True
@@ -70,25 +63,42 @@ class Wall:
             return True
         return False
 
-    def remove_tail(self):
+    def remove_tail(self) -> bool:
+        """
+        Function removes tail from wall
+        :return: True if operation successful, False otherwise
+        """
         if len(self.__locations) > 0:
             self.__locations = self.__locations[:-1]
             return True
         return False
 
-    def remove_head(self):
+    def remove_head(self) -> bool:
+        """
+        Function removes head from wall
+        :return: True if operation successful, False otherwise
+        """
         if len(self.__locations) > 0:
             self.__locations = self.__locations[1:]
             return True
         return False
 
-    def move(self):
+    def move(self) -> None:
+        """
+        Function moves the wall 1 block based on direction
+        """
         self.__add_head()
         if len(self.__locations) == 4:
             self.remove_tail()
 
-    def get_locations(self):
+    def get_locations(self) -> list:
+        """
+        :return: A list of all the locations of the wall
+        """
         return self.__locations
 
-    def get_wall_length(self):
+    def get_wall_length(self) -> int:
+        """
+        :return: The length of the wall
+        """
         return self.__length
