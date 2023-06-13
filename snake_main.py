@@ -25,6 +25,8 @@ def main_loop(gd: GameDisplay, args: argparse.Namespace) -> None:
         # DRAW BOARD
         game.draw_board(gd)
         # WAIT FOR NEXT ROUND:
+        game_score = game.get_score()  # NEW
+        gd.show_score(game_score)  # NEW
         game.end_round()
         gd.end_round()
 

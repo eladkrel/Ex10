@@ -1,5 +1,7 @@
 class Snake:
     def __init__(self, board_width, board_height, length=3, orientation="Up"):
+        self.__board_width = board_width  # NEW
+        self.__board_height = board_height  # NEW
         self.__width = board_width // 2
         self.__height = board_height // 2
         self.__length = length
@@ -30,11 +32,29 @@ class Snake:
                 return True
         return False
 
-    def __add_head(self):
+    def __add_head(self):  # NEW
         if len(self.__locations) == 0:
             self.__locations.append((self.__width, self.__height))
             return True
         else:
+            # head_width, head_height = self.__locations[0]
+            # if self.__orientation == "Up":
+            #     if self.__locations[0][1] < self.__board_height - 1:
+            #         self.__locations.insert(0, (head_width, head_height + 1))
+            #         return True
+            # if self.__orientation == "Down":
+            #     if self.__locations[0][1] > 0:
+            #         self.__locations.insert(0, (head_width, head_height - 1))
+            #         return True
+            # if self.__orientation == "Left":
+            #     if self.__locations[0][0] > 0:
+            #         self.__locations.insert(0, (head_width - 1, head_height))
+            #         return True
+            # if self.__orientation == "Right":
+            #     if self.__locations[0][0] < self.__board_width - 1:
+            #         self.__locations.insert(0, (head_width + 1, head_height))
+            #         return True
+            # return False
             head_width, head_height = self.__locations[0]
             if self.__orientation == "Up":
                 self.__locations.insert(0, (head_width, head_height + 1))
@@ -57,15 +77,17 @@ class Snake:
         return False
 
     def move(self):
-        self.__add_head()
-        if self.__grow == 0:
-            self.remove_tail()
-        else:
-            self.__grow -= 1
-        if self.__locations[0] in self.__locations[1:]:
-            # Snake hit itself
-            return False
-        return True
+        if self.__add_head():
+            if self.__grow == 0:
+                self.remove_tail()
+            else:
+                self.__grow -= 1
+                self.__length += 1 # NEW
+            if self.__locations[0] in self.__locations[1:]:
+                # Snake hit itself
+                return False
+            return True
+        return False
 
     def get_locations(self):
         return self.__locations
@@ -87,3 +109,10 @@ class Snake:
             return False
         self.__orientation = orientation
         return True
+
+
+    def grow(self, num):
+        self.__grow += num
+
+    def get_length(self):
+        return self.__length

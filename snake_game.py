@@ -20,6 +20,8 @@ class SnakeGame:
         self.__apples_num = args.apples
         self.__round = 0
         self.__max_rounds = args.rounds
+        self.__score = 0  # NEW
+        self.__suicide = False
         # if self.__walls_num > 0:
         #     self.__walls.append(self.add_wall())
         # self.__update_board()
@@ -44,20 +46,25 @@ class SnakeGame:
             self.__snake.set_orientation('Up')
         if self.__key_clicked == 'Down':
             self.__snake.set_orientation('Down')
-        self.__snake.move()
+        if not self.__snake.move():
+            self.__suicide = True
         self.__update_board()
         if self.__round % 2 == 0 and self.__round != 0:
             for wall in self.__walls:
                 wall.move()
+        self.__remove_dead_walls() # CHANGED PLACE
         if len(self.__walls) < self.__walls_num and self.__round != 0:
             self.add_wall()
+        self.__remove_dead_apples() # NEW
         if len(self.__apples) < self.__apples_num and self.__round != 0:
             self.add_apple()
-        self.__remove_dead_walls()
-        self.__round += 1
+        # self.__remove_dead_walls()
+        # self.__round += 1
 
-    def are_empty_cells(self, cells_list):
+    def are_empty_cells(self, cells_list):  # CHANGED IT
         for width, height in cells_list:
+            if width > self.__width-1 or width < 0 or height > self.__height-1 or height < 0:  # NEW LINE
+                continue
             if self.__game_board[width][height] is not None:
                 return False
         return True
@@ -73,10 +80,17 @@ class SnakeGame:
         for apple in self.__apples:
             apples_locations.append(apple.get_location())
         for width, height in snake_locations:
-            self.__game_board[width][height] = "black"
+            if width > self.__width-1 or width < 0 or height > self.__height-1 or height < 0:  # NEW
+                continue  # NEW
+            else:  # NEW
+                self.__game_board[width][height] = "black"  # NEW
         for wall in walls_locations:
             for width, height in wall:
-                self.__game_board[width][height] = "blue"
+                if width > self.__width-1 or width < 0 or height > self.__height-1 or height < 0:  # NEW
+                    continue  # NEW
+                else:  # NEW
+                    self.__game_board[width][height] = "blue"  # NEW
+                # self.__game_board[width][height] = "blue"
         for width, height in apples_locations:
             self.__game_board[width][height] = "green"
 
@@ -91,17 +105,79 @@ class SnakeGame:
         for apple in self.__apples:
             apples_locations.append(apple.get_location())
         for width, height in snake_locations:
-            self.__game_board[width][height] = "black"
+            if width > self.__width-1 or width < 0 or height > self.__height-1 or height < 0:  # NEW
+                continue # NEW
+            else:  # NEW
+                self.__game_board[width][height] = "black"  # NEW
         for wall in walls_locations:
             for width, height in wall:
-                self.__game_board[width][height] = "blue"
+                if width > self.__width-1 or width < 0 or height > self.__height-1 or height < 0:  # NEW
+                    continue  # NEW
+                else:  # NEW
+                    self.__game_board[width][height] = "blue"  # NEW
+                # self.__game_board[width][height] = "blue"
         for width, height in apples_locations:
             self.__game_board[width][height] = "green"
 
-    def __remove_dead_walls(self):
+    # def __remove_dead_walls(self):
+    #     for wall in self.__walls:
+    #         if len(wall.get_locations()) == 0:
+    #             self.__walls.remove(wall)
+
+
+    def __remove_dead_walls(self):  # NEW
+        all_cells = self.all_cells()
         for wall in self.__walls:
-            if len(wall.get_locations()) == 0:
+            wall_coordinates = wall.get_locations()
+            wall_still_in = False
+            # print(wall_coordinates)
+            for wall_cell in wall_coordinates:
+                if wall_cell in all_cells:
+                    wall_still_in = True
+                    break
+            if not wall_still_in:
                 self.__walls.remove(wall)
+                # new_wall = Wall(self.__width, self.__height)  # NEW
+                # self.__walls.append(new_wall)  # NEW
+
+
+    def __remove_dead_apples(self):  # NEW
+        snake_locations = self.__snake.get_locations()
+        all_walls_cells = []
+        for wall in self.__walls:
+            wall_coordinates = wall.get_locations()
+            all_walls_cells.append(wall_coordinates)
+
+        for apple in self.__apples:
+            apple_still_okay = True
+            apple_coordinates = apple.get_location()
+            if apple_coordinates in snake_locations:
+                apple_still_okay = False
+                self.__snake.grow(3)
+                self.__score += int(self.__snake.get_length()**0.5)
+                print(self.__snake.get_length())
+            for wall in all_walls_cells:
+                if apple_coordinates in wall:
+                    apple_still_okay = False
+                    break
+            if not apple_still_okay:
+                self.__apples.remove(apple)
+
+
+
+
+
+
+
+    def all_cells(self):
+        all_cells = []
+        for row in range(len(self.__game_board)):
+            for col in range(len(self.__game_board[0])):
+                all_cells.append((row, col))
+        return all_cells
+
+
+
 
     def add_apple(self):
         is_possible = False
@@ -132,10 +208,28 @@ class SnakeGame:
                 if self.__game_board[col][row] is not None:
                     gd.draw_cell(col, row, self.__game_board[col][row])
 
-    def end_round(self) -> None:
-        pass
+    def end_round(self) -> None: # NEW
+        self.__round += 1
 
-    def is_over(self) -> bool:
+
+    def is_over(self) -> bool:  # NEW
+        if self.__suicide:
+            return True
+        walls_locations = []
+        if self.__max_rounds != -1:
+            if self.__round == self.__max_rounds + 1:
+                return True
+        snake_locations = self.__snake.get_locations()
+        snake_head = snake_locations[0]
+        snake_head_x = snake_head[0]
+        snake_head_y = snake_head[1]
+        for wall in self.__walls:
+            walls_locations.append(wall.get_locations())
+        for wall in walls_locations:
+            if snake_head in wall:
+                return True
+        if snake_head_x > self.__width-1 or snake_head_x < 0 or snake_head_y > self.__height-1 or snake_head_y < 0:
+            return True
         return False
 
     def get_num_apples(self):
@@ -149,4 +243,9 @@ class SnakeGame:
 
     def get_walls(self):
         return self.__walls
+
+    def get_score(self):  # NEW
+        return self.__score
+
+
 

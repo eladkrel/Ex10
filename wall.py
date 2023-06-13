@@ -37,23 +37,37 @@ class Wall:
 
     def __add_head(self):
 
-        head_width, head_height = self.__locations[0]
+        # head_width, head_height = self.__locations[0]  # THERE IS A PROBLEM
+        # if self.__orientation == "Up":
+        #     if self.__locations[0][1] < self.__board_height - 1:
+        #         self.__locations.insert(0, (head_width, head_height + 1))
+        #         return True
+        # if self.__orientation == "Down":
+        #     if self.__locations[0][1] > 0:
+        #         self.__locations.insert(0, (head_width, head_height - 1))
+        #         return True
+        # if self.__orientation == "Left":
+        #     if self.__locations[0][0] > 0:
+        #         self.__locations.insert(0, (head_width - 1, head_height))
+        #         return True
+        # if self.__orientation == "Right":
+        #     if self.__locations[0][0] < self.__board_width - 1:
+        #         self.__locations.insert(0, (head_width + 1, head_height))
+        #         return True
+        # return False
+        head_width, head_height = self.__locations[0]  # THERE IS A PROBLEM
         if self.__orientation == "Up":
-            if self.__locations[0][1] < self.__board_height - 1:
-                self.__locations.insert(0, (head_width, head_height + 1))
-                return True
+            self.__locations.insert(0, (head_width, head_height + 1))
+            return True
         if self.__orientation == "Down":
-            if self.__locations[0][1] > 0:
-                self.__locations.insert(0, (head_width, head_height - 1))
-                return True
+            self.__locations.insert(0, (head_width, head_height - 1))
+            return True
         if self.__orientation == "Left":
-            if self.__locations[0][0] > 0:
-                self.__locations.insert(0, (head_width - 1, head_height))
-                return True
+            self.__locations.insert(0, (head_width - 1, head_height))
+            return True
         if self.__orientation == "Right":
-            if self.__locations[0][0] < self.__board_width - 1:
-                self.__locations.insert(0, (head_width + 1, head_height))
-                return True
+            self.__locations.insert(0, (head_width + 1, head_height))
+            return True
         return False
 
     def remove_tail(self):
@@ -70,7 +84,8 @@ class Wall:
 
     def move(self):
         self.__add_head()
-        self.remove_tail()
+        if len(self.__locations) == 4:
+            self.remove_tail()
 
     def get_locations(self):
         return self.__locations
