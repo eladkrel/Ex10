@@ -1,5 +1,12 @@
 class Snake:
     def __init__(self, board_width, board_height, length=3, orientation="Up"):
+        """
+        Init for the Snake object.
+        :param board_width: the width of the board in the game
+        :param board_height: the height of the board in the game
+        :param length: start length of snake
+        :param orientation: the starting orientation of the snake
+        """
         self.__board_width = board_width  # NEW
         self.__board_height = board_height  # NEW
         self.__width = board_width // 2
