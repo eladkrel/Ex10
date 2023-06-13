@@ -179,7 +179,8 @@ class SnakeGame:
         Function checks if any of the apples in the game are dead (eaten or
         passed on) and if an apple is dead it is removed.
         """
-        snake_locations = self.__snake.get_locations()
+        if self.__is_snake:
+            snake_locations = self.__snake.get_locations()
         all_walls_cells = []
         for wall in self.__walls:
             wall_coordinates = wall.get_locations()
@@ -188,10 +189,11 @@ class SnakeGame:
         for apple in self.__apples:
             apple_still_okay = True
             apple_coordinates = apple.get_location()
-            if apple_coordinates in snake_locations:
-                apple_still_okay = False
-                self.__snake.grow(3)
-                self.__score += int(self.__snake.get_length()**0.5)
+            if self.__is_snake:
+                if apple_coordinates in snake_locations:
+                    apple_still_okay = False
+                    self.__snake.grow(3)
+                    self.__score += int(self.__snake.get_length()**0.5)
             for wall in all_walls_cells:
                 if apple_coordinates in wall:
                     apple_still_okay = False
