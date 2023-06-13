@@ -38,6 +38,8 @@ class SnakeGame:
         #     self.__x -= 1
         # elif (self.__key_clicked == 'Right') and (self.__x < 40):
         #     self.__x += 1
+        walls_locations = []
+        snake_locations = self.__snake.get_locations()
         if self.__key_clicked == 'Left':
             self.__snake.set_orientation('Left')
         if self.__key_clicked == 'Right':
@@ -58,8 +60,22 @@ class SnakeGame:
         self.__remove_dead_apples() # NEW
         if len(self.__apples) < self.__apples_num and self.__round != 0:
             self.add_apple()
+
+        for wall in self.__walls:
+            walls_locations.append(wall.get_locations())
+        for wall in walls_locations:
+            for snake_cell in snake_locations[2:]:
+                if snake_cell in wall:
+
+
         # self.__remove_dead_walls()
         # self.__round += 1
+
+
+    def __split_snake(self, snake_cell):
+
+
+
 
     def are_empty_cells(self, cells_list):  # CHANGED IT
         for width, height in cells_list:
@@ -118,6 +134,8 @@ class SnakeGame:
                 # self.__game_board[width][height] = "blue"
         for width, height in apples_locations:
             self.__game_board[width][height] = "green"
+
+
 
     # def __remove_dead_walls(self):
     #     for wall in self.__walls:
@@ -221,13 +239,18 @@ class SnakeGame:
                 return True
         snake_locations = self.__snake.get_locations()
         snake_head = snake_locations[0]
+        snake_neck = snake_locations[1]
         snake_head_x = snake_head[0]
         snake_head_y = snake_head[1]
         for wall in self.__walls:
             walls_locations.append(wall.get_locations())
         for wall in walls_locations:
-            if snake_head in wall:
+            if snake_head in wall or snake_neck in wall:
                 return True
+
+
+
+
         if snake_head_x > self.__width-1 or snake_head_x < 0 or snake_head_y > self.__height-1 or snake_head_y < 0:
             return True
         return False
