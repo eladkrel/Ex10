@@ -28,6 +28,8 @@ class SnakeGame:
         self.__max_rounds = args.rounds
         self.__score = 0
         self.__suicide = False
+        self.__split_next_round = False
+        self.__split_cell = None
 
     def read_key(self, key_clicked: Optional[str]) -> None:
         self.__key_clicked = key_clicked
@@ -37,6 +39,10 @@ class SnakeGame:
         Function handles all object interactions.
         """
         walls_locations = []
+        if self.__split_next_round:
+            self.__split_snake(self.__split_cell)
+            self.__snake.remove_tail()
+            self.__split_next_round = False
         if self.__is_snake:
             if self.__key_clicked == 'Left':
                 self.__snake.set_orientation('Left')
@@ -59,7 +65,6 @@ class SnakeGame:
         self.__remove_dead_apples()
         if len(self.__apples) < self.__apples_num and self.__round != 0:
             self.add_apple()
-
         if self.__is_snake:
             for wall in self.__walls:
                 walls_locations.append(wall.get_locations())
@@ -67,7 +72,9 @@ class SnakeGame:
             for wall in walls_locations:
                 for snake_cell in snake_locations[2:]:
                     if snake_cell in wall:
-                        self.__split_snake(snake_cell)
+                        self.__split_next_round = True
+                        self.__split_cell = snake_cell
+                        # self.__split_snake(snake_cell)
                         break
 
     def __split_snake(self, snake_cell) -> None:
