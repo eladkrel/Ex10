@@ -16,6 +16,7 @@ class Wall:
         self.__locations = []
         self.__locations.append((self.__x, self.__y))
         for i in range(self.__length//2):
+            # creating wall depends on wall's size
             self.__add_head()
             self.__add_tail()
 

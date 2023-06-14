@@ -27,11 +27,8 @@ def main_loop(gd: GameDisplay, args: argparse.Namespace) -> None:
         # DRAW BOARD
         game.draw_board(gd)
         # WAIT FOR NEXT ROUND:
-        game_score = game.get_score()  # NEW
-        gd.show_score(game_score)  # NEW
+        game_score = game.get_score()
+        gd.show_score(game_score)
         game.end_round()
         gd.end_round()
 
-if __name__ == "__main__":
-    print("You should run:\n"
-          "> python game_display.py")

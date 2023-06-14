@@ -12,7 +12,7 @@ class SnakeGame:
         Init for SnakeGame object.
         :param args: Namespace of all the game arguments.
         """
-        self.__is_snake = not args.debug
+        self.__is_snake = not args.debug  # indicates if there's a snake in game
         if self.__is_snake:
             self.__snake = Snake(args.width, args.height)
         self.__width = args.width
@@ -38,44 +38,64 @@ class SnakeGame:
         """
         Function handles all object interactions.
         """
-        walls_locations = []
         if self.__split_next_round:
+            # if last round wall had collided with snake's body
             self.__split_snake(self.__split_cell)
             self.__snake.remove_tail()
             self.__split_next_round = False
         if self.__is_snake:
-            if self.__key_clicked == 'Left':
-                self.__snake.set_orientation('Left')
-            if self.__key_clicked == 'Right':
-                self.__snake.set_orientation('Right')
-            if self.__key_clicked == 'Up':
-                self.__snake.set_orientation('Up')
-            if self.__key_clicked == 'Down':
-                self.__snake.set_orientation('Down')
+            # making sure there is a snake
+            # if so, change snake's orientation
+            self.__change_orientation()
             if self.__round > 0 and not self.__snake.move():
-                self.__suicide = True
+                # snake begins to move
+                self.__suicide = True  # if hit itself
 
         self.__update_board()
         if self.__round % 2 == 0 and self.__round != 0:
+            # move wall only when turn is even
             for wall in self.__walls:
                 wall.move()
-        self.__remove_dead_walls()
+        self.__remove_dead_walls()  # wall is out of bounds
         if len(self.__walls) < self.__walls_num and self.__round != 0:
             self.add_wall()
-        self.__remove_dead_apples()
+        self.__remove_dead_apples()  # apple has been eaten / destroyed
         if len(self.__apples) < self.__apples_num and self.__round != 0:
             self.add_apple()
         if self.__is_snake:
-            for wall in self.__walls:
-                walls_locations.append(wall.get_locations())
-            snake_locations = self.__snake.get_locations()
-            for wall in walls_locations:
-                for snake_cell in snake_locations[2:]:
-                    if snake_cell in wall:
-                        self.__split_next_round = True
-                        self.__split_cell = snake_cell
-                        # self.__split_snake(snake_cell)
-                        break
+            # making sure there is a snake
+            # check if snake needs to be split next turn
+            self.__cell_to_split()
+
+    def __change_orientation(self) -> None:
+        """
+         Function changing snake's orientation if needed.
+         """
+        if self.__key_clicked == 'Left':
+            self.__snake.set_orientation('Left')
+        if self.__key_clicked == 'Right':
+            self.__snake.set_orientation('Right')
+        if self.__key_clicked == 'Up':
+            self.__snake.set_orientation('Up')
+        if self.__key_clicked == 'Down':
+            self.__snake.set_orientation('Down')
+
+    def __cell_to_split(self) -> None:
+        """
+         Function checking if snaked needs to be split.
+         """
+        walls_locations = []
+        for wall in self.__walls:
+            # adding all wall locations
+            walls_locations.append(wall.get_locations())
+        snake_locations = self.__snake.get_locations()
+        for wall in walls_locations:
+            for snake_cell in snake_locations[2:]:
+                # if wall collided with snake's body
+                if snake_cell in wall:
+                    self.__split_next_round = True
+                    self.__split_cell = snake_cell
+                    break
 
     def __split_snake(self, snake_cell) -> None:
         """
@@ -110,7 +130,6 @@ class SnakeGame:
         """
         self.__game_board = [[None for _ in range(self.__height)] for _ in
                              range(self.__width)]
-        # snake_locations = self.__snake.get_locations()
         walls_locations = []
         apples_locations = []
         for wall in self.__walls:
@@ -118,6 +137,7 @@ class SnakeGame:
         for apple in self.__apples:
             apples_locations.append(apple.get_location())
         if self.__is_snake:
+            # making sure there is a snake
             snake_locations = self.__snake.get_locations()
             for width, height in snake_locations:
                 if width > self.__width - 1 or width < 0 or height > \
@@ -141,7 +161,6 @@ class SnakeGame:
         """
         self.__game_board = [[None for _ in range(self.__height)] for _ in
                              range(self.__width)]
-        # snake_locations = self.__snake.get_locations()
         walls_locations = []
         apples_locations = []
         for wall in self.__walls:

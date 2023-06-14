@@ -8,8 +8,8 @@ class Snake:
         :param length: start length of snake
         :param orientation: the starting orientation of the snake
         """
-        self.__board_width = board_width  # NEW
-        self.__board_height = board_height  # NEW
+        self.__board_width = board_width
+        self.__board_height = board_height
         self.__width = board_width // 2
         self.__height = board_height // 2
         self.__length = length
@@ -28,6 +28,7 @@ class Snake:
             self.__locations.append((self.__width, self.__height))
             return True
         else:
+            # adding locations depends on snake orientation
             last_width, last_height = self.__locations[-1]
             if self.__orientation == "Up":
                 self.__locations.append((last_width, last_height - 1))
@@ -52,6 +53,7 @@ class Snake:
             self.__locations.append((self.__width, self.__height))
             return True
         else:
+            # adding locations depends on snake orientation
             head_width, head_height = self.__locations[0]
             if self.__orientation == "Up":
                 self.__locations.insert(0, (head_width, head_height + 1))
@@ -84,8 +86,10 @@ class Snake:
         """
         self.__add_head()
         if self.__grow <= 0:
+            # if snake had not eaten apple
             self.remove_tail()
         else:
+            # snake ate apple
             self.__grow -= 1
             self.__length += 1
         if self.__locations[0] in self.__locations[1:]:
