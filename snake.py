@@ -82,17 +82,16 @@ class Snake:
         Function moves the snake 1 block based on direction
         :return: True if operation successful, False otherwise
         """
-        if self.__add_head():
-            if self.__grow == 0:
-                self.remove_tail()
-            else:
-                self.__grow -= 1
-                self.__length += 1
-            if self.__locations[0] in self.__locations[1:]:
-                # Snake hit itself
-                return False
-            return True
-        return False
+        self.__add_head()
+        if self.__grow <= 0:
+            self.remove_tail()
+        else:
+            self.__grow -= 1
+            self.__length += 1
+        if self.__locations[0] in self.__locations[1:]:
+            # Snake hit itself
+            return False
+        return True
 
     def get_locations(self) -> list:
         """
@@ -142,3 +141,6 @@ class Snake:
         :return: The length of the snake
         """
         return self.__length
+
+    def remove_head(self):
+        self.__locations = self.__locations[1:]

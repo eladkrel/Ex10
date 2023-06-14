@@ -46,8 +46,9 @@ class SnakeGame:
                 self.__snake.set_orientation('Up')
             if self.__key_clicked == 'Down':
                 self.__snake.set_orientation('Down')
-            if not self.__snake.move():
+            if self.__round > 0 and not self.__snake.move():
                 self.__suicide = True
+
         self.__update_board()
         if self.__round % 2 == 0 and self.__round != 0:
             for wall in self.__walls:
@@ -254,11 +255,17 @@ class SnakeGame:
         Function checks if the game is over according to the rules.
         :return: True if game should end, False otherwise.
         """
+        # print("here")
         if self.__suicide:
+            print("here1")
+            # self.__snake.remove_head()
             return True
         walls_locations = []
         if self.__max_rounds != -1:
             if self.__round == self.__max_rounds + 1:
+                if self.__is_snake:
+                    print("here2")
+                    # self.__snake.remove_head()
                 return True
         if self.__is_snake:
             snake_locations = self.__snake.get_locations()
@@ -268,12 +275,16 @@ class SnakeGame:
                 walls_locations.append(wall.get_locations())
             for wall in walls_locations:
                 if snake_head in wall or snake_neck in wall:
+                    print("here3")
+                    # self.__snake.remove_head()
                     return True
 
             snake_head_x = snake_head[0]
             snake_head_y = snake_head[1]
             if snake_head_x > self.__width - 1 or snake_head_x < 0 or \
                     snake_head_y > self.__height - 1 or snake_head_y < 0:
+                print("here4")
+                # self.__snake.remove_head()
                 return True
             return False
 
