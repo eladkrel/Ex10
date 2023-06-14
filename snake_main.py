@@ -31,7 +31,6 @@ def main_loop(gd: GameDisplay, args: argparse.Namespace) -> None:
         gd.show_score(game_score)  # NEW
         game.end_round()
         gd.end_round()
-    print("end")
 
 if __name__ == "__main__":
     print("You should run:\n"
